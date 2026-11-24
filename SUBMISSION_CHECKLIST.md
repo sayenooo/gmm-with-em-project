@@ -10,12 +10,13 @@
 - [x] Log-likelihood histories, termination criterion and stricter-tolerance sensitivity are documented.
 - [x] AIC and BIC comparison is included, with K=3 selected by BIC and K=4 preferred by AIC.
 - [x] Four unit tests passed; full analysis completed within five minutes on the assistant's environment.
-- [x] A 15-slide PPTX exists with an approximately 15-minute storyline and notes.
+- [x] A 16-slide PPTX exists (including references and disclosure) with an approximately 15-minute storyline and notes.
 
 ## Must be completed by students before handing in
 
 - [ ] Fill in real team members' names on slide 1, plus actual specific independent contributions in `TEAM_CONTRIBUTIONS.md` and `AI_DISCLOSURE.md`.
-- [ ] Confirm AI disclosure is present at the end of the final submitted materials; also check it is consistent with slide 15.
+- [ ] Confirm AI disclosure is present at the end of the final submitted materials; also check it is consistent with slide 16.
+- [ ] Review all cited papers/official webpages in `REFERENCES.md` and verify the matching slide claims.
 - [ ] Rerun `python -m unittest -v test_gmm` and `python gmm_em.py` in the environment used to demonstrate the assignment; verify runtime <300 seconds.
 - [ ] Rehearse the presentation at ~15 minutes; divide actual slide speaking assignments fairly.
 - [ ] Confirm only the permitted final deliverables and any required supporting files are submitted through the course portal by the deadline.

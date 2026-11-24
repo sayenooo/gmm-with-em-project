@@ -10,8 +10,10 @@
 - `FAA_AEDT_data.csv`: course-provided input data (1,000 observations, two features).
 - `test_gmm.py`: unit tests for normal density, M-step, synthetic recovery, and dataset reproducibility.
 - `results/`: hard and soft cluster assignments, fitted means/covariances, individual scatter plots for K=2,3,4,5, combined figure, likelihood curves, model-selection tables/plot, and runtime details.
-- `FAA_GMM_EM_presentation.pptx`: 15-slide English deck with speaker notes for an approximately 15-minute presentation.
-- `AI_DISCLOSURE.md`: transparency statement, tools, assistance scope, student contribution fields and prompt record.
+- `FAA_GMM_EM_presentation.pptx`: 16-slide English deck (including references and AI disclosure) with speaker notes for an approximately 15-minute presentation.
+- `AI_DISCLOSURE.md`: truthful five-part AI usage disclosure; requires actual student-contribution fields before submission.
+- `REFERENCES.md`: checked peer-reviewed EM/GMM, AIC/BIC publications and FAA primary website, with claim-to-citation map.
+- `VALIDATION_STEPS.md`: reproducible step-by-step independent review instructions and evidence log.
 - `TEAM_CONTRIBUTIONS.md`: fields to complete truthfully for your actual team.
 - `SUBMISSION_CHECKLIST.md` and `DEFENSE_QA.md`: final verification and presentation practice.
 
@@ -54,4 +56,4 @@ All team members must understand the EM derivation, execute or review the experi
 
 ## Sources, provenance and AI disclosure
 
-Course handout: *Gaussian Mixture Model (GMM) with Expectation-Maximization (EM)*, Fall 2026, pp. 1–3. Dataset: course-provided `FAA_AEDT_data.csv`. Source code and draft slides were developed with **OpenAI ChatGPT** assistance, including implementation ideas, code drafting, testing, experimental interpretation and presentation drafting. See **`AI_DISCLOSURE.md`** for the full tool/scope/how/prompt disclosure and the **student contribution fields that must be completed before submission**. Add any other references that your team genuinely consulted, and do not claim independent work that was done by AI.
+Course handout: *Gaussian Mixture Model (GMM) with Expectation-Maximization (EM)*, Fall 2026, pp. 1–3. Dataset: course-provided `FAA_AEDT_data.csv`. Source code and draft slides were developed with **OpenAI ChatGPT** assistance, including implementation ideas, code drafting, testing, experimental interpretation and presentation drafting. See **`AI_DISCLOSURE.md`** for the full tool/scope/how/prompt disclosure and the **student contribution fields that must be completed before submission**. Consult **`REFERENCES.md`** for the authoritative sources checked on November 24, and cite only sources actually used. Do not claim independent work that was done by AI.

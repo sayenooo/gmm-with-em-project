@@ -1,47 +1,28 @@
-# AI usage disclosure — complete and review before submission
+# AI disclosure — final wording to review and customize before submission
 
-This document is intended to accompany the team's submitted code and presentation. **The statements about AI-generated work below describe the actual history of this draft; fields for independent student work must be filled in by the people who did that work.**
+The instructor requires **(1) tool, (2) assisted portions, (3) how it assisted, (4) independently completed student work, (5) prompt record (optional but recommended)**. Do not sign/submit the document with unfilled student contribution fields.
 
-## 1. Which AI tool was used?
+## English disclosure for the submission (factual record of this project)
 
-**OpenAI ChatGPT**, used on **November 24, 2026**. The exact underlying model/version was not independently verified and is therefore **not asserted**.
+**Tool and date:** OpenAI ChatGPT, November 24, 2026. No unverified model-version claim is made.
 
-## 2. Which parts did AI assist with?
+**What it assisted with and how:** ChatGPT helped interpret the course instructions; **generated an initial Python GMM/EM implementation, tests and experiment scripts**; executed the supplied two-dimensional CSV to produce draft clustering figures, convergence/model-selection summaries and validation logs; reviewed the code and outputs against the assignment step by step; improved the presentation structure, visual formatting and speaker notes; and helped locate and verify academic/official sources. The algorithmic implementation uses project-written NumPy formulas and **does not call a ready-made GMM estimator**. 'From scratch' describes the absence of a prebuilt model in the code, **not a claim that the code was typed without AI assistance**.
 
-- Interpreting the three-page course handout and extracting submission requirements.
-- Drafting the NumPy-based Gaussian mixture model and EM implementation, the Python tests, command-line workflow and project README.
-- Running the provided FAA CSV through the draft implementation in the assistant's execution environment and generating clustering, model-selection and convergence plots and CSV summaries.
-- Drafting the storyline, English presentation slides and presenter notes.
-- Auditing the GitHub repository against the assignment and identifying work to complete before submission.
+**What students completed independently:** [INSERT verified specific actions by each actual member: e.g., reproduced runs, independently derived/checked EM updates, changed code, reviewed citations, validated numerical results, rehearsed slides]. For each claim provide a name and evidence (commit, calculation, local log, or rehearsal). If a draft AI-produced artifact was used without substantive revision, state that rather than calling it independently authored.
 
-## 3. How was AI used?
+**Representative exact prompts:**
+- "бро нам задали задание групповой проект плиз помоги нам сделать этот проект" (course PDF + CSV attached).
+- "бро все что ты сделал закоммит в [https://github.com/sayenooo/gmm-with-em-project](https://github.com/sayenooo/gmm-with-em-project)".
+- "бро проверь по соответсвию вот задание наше".
+- "брооооооооооо можно плиз написать в ai disclosure что ты только помог офрмить презентацию и проверил на корректность то что мы разработала step by step бро и потом точно ли все provided кажется sources мало нам нужны достоверные информации короче бро давай переделай проверь интрукции к проекту еще раз".
 
-ChatGPT suggested designs, drafted code and explanatory text, executed development tests/experiments, inspected results, and helped check that requested deliverables were present. **These artifacts should be treated as AI-assisted drafts unless the students have reviewed, modified and verified them.** The project intentionally does not import a ready-made GMM/EM estimator; the E- and M-step formulas are implemented in `gmm_em.py` using NumPy arithmetic and linear algebra.
+**Sources:** See `REFERENCES.md` for the published EM/GMM theory, AIC/BIC foundations and official FAA AEDT context; the assignment PDF and supplied CSV are the primary project materials.
 
-## 4. Which parts did students complete independently?
+## Before submission — student fact check
 
-**To be completed truthfully by the team before submitting.** Do not copy sample duties as facts. Use the following format:
+1. Review `gmm_em.py` and all results; do not claim it was independently authored solely by students if it was generated with AI help.
+2. Add each member's **true** contribution in `TEAM_CONTRIBUTIONS.md`, and replace the student-work placeholder above with a truthful, precise statement.
+3. Ensure the final presentation's last slide and this file tell the same story.
+4. Include any additional AI tools, prompts or external sources actually used by the students.
 
-| Student full name / ID | Independently completed and verified work | Evidence (commit, test, calculations, slide, rehearsal) |
-|---|---|---|
-| [Member 1] | [Exact tasks actually done] | [Evidence] |
-| [Member 2] | [Exact tasks actually done] | [Evidence] |
-| [Member 3, if applicable] | [Exact tasks actually done] | [Evidence] |
-
-If the AI-assisted code or slides were submitted unchanged, disclose that plainly; **do not misstate the independent contribution**. Additional team members may be added or the rows adjusted to the real team size.
-
-## 5. Actual prompts (recommended by the handout)
-
-Original prompt with `GMM_with_EM_project_description.pdf` and `FAA_AEDT_data.csv`:
-
-> бро нам задали задание групповой проект плиз помоги нам сделать этот проект
-
-Further requests in the same ChatGPT discussion included committing the resulting project to `https://github.com/sayenooo/gmm-with-em-project`, checking its correspondence with the assignment and refining final-submission materials. These paraphrased follow-up descriptions should not be presented as exact verbatim quotes. Add any other tools and exact prompts used by team members, where relevant.
-
-## References
-
-1. Course assignment handout, *Gaussian Mixture Model (GMM) with Expectation-Maximization (EM)*, Fall 2026, pages 1–3 (source of the FAA/AEDT problem statement and formal assignment constraints).
-2. `FAA_AEDT_data.csv`, course-supplied data file.
-3. OpenAI ChatGPT, AI-assisted draft development session, November 24, 2026 (as documented above).
-
-**Final checklist:** Add this disclosure to the final submission package, ensure slide 15 matches it, complete the verified independent contributions, and cite any additional sources actually consulted.
+**Why not say “AI only formatted the slides and checked our code”?** That would contradict the documented chat in which ChatGPT created the initial code, ran experiments and drafted the deck. Such a statement would not satisfy the handout's requirement to accurately describe which sections AI helped with.
