@@ -1,5 +1,5 @@
 """Full-covariance GMM with EM from scratch; NumPy for linear algebra only.
-AI assistance: OpenAI ChatGPT (GPT-6.2), draft implementation and validation.
+AI assistance: OpenAI ChatGPT assistance, draft implementation and validation; see AI_DISCLOSURE.md.
 """
 from pathlib import Path
 import argparse, csv, time
