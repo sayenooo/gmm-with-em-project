@@ -2,7 +2,7 @@
 
 Application of AI in Aerospace · Sejong University · Fall 2026
 
-Team: Maisha, Zhansaya, Chaewon. Confirm full names and actual contributions before submission.
+Team: Maisha, Zhansaya, Chaewon
 
 ## Run the project
 
