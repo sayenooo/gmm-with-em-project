@@ -1,4 +1,3 @@
-"""Educational GMM-EM implementation, with ChatGPT assistance."""
 from pathlib import Path
 from time import perf_counter
 import numpy as np
