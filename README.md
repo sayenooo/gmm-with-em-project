@@ -4,6 +4,18 @@
 
 **Status:** Technical draft tested and reproduced; **not ready for final submission until students fill in their true names and verify/document individual contributions**. See `TEAM_CONTRIBUTIONS.md` and `SUBMISSION_CHECKLIST.md`.
 
+## Quick navigation
+
+| Purpose | Open |
+|---|---|
+| Presentation and 15-minute defense | [Presentation guide](PRESENTATION_GUIDE.md) · [existing PowerPoint](FAA_GMM_EM_presentation.pptx) · [Q&A](DEFENSE_QA.md) |
+| Implementation | [EM source](gmm_em.py) · [tests](test_gmm.py) · [dependencies](requirements.txt) |
+| Experimental evidence | [K=2–5 plots](results/clusters_all.png) · [convergence](results/convergence.png) · [model comparison](results/model_selection.csv) |
+| Reproducibility | [Audit](REPRODUCTION_AUDIT.md) · [validation steps](VALIDATION_STEPS.md) |
+| Submission | [Checklist](SUBMISSION_CHECKLIST.md) · [references](REFERENCES.md) · [AI disclosure](AI_DISCLOSURE.md) · [team contributions](TEAM_CONTRIBUTIONS.md) |
+
+**Latest verification (26 Nov):** the two Python source files and uploaded dataset matched the repository's Git blob hashes. Four tests passed, 48/48 default starts converged, and the complete default analysis took 6.496 seconds in the review environment. The fitted metrics and strict-tolerance result reproduced. The updated downloadable deck is supplied separately in ChatGPT; the existing repository PPTX is preserved.
+
 ## What is included
 
 - `gmm_em.py`: original full-covariance Gaussian mixture model trained using E-step and M-step coded in NumPy. No sklearn/SciPy GMM implementation is called.

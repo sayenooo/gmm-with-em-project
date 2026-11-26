@@ -57,3 +57,7 @@ BIC still prefers K=3; AIC still prefers K=4. The alternative K=5 solution has l
 ## Additional AI disclosure
 
 OpenAI ChatGPT assisted on November 26 with repository inspection, reproduction of the existing implementation, runtime and convergence checks, an alternate-seed experiment, and this audit document. These tasks were performed by AI and are not evidence of independent student work. This document supplements AI_DISCLOSURE.md; include this additional assistance in the final submission disclosure. Student contributions must be completed and verified by the actual team.
+
+## Fresh default rerun — November 26, 2026 (presentation preparation)
+
+Verified Git blob hashes again for `gmm_em.py`, `test_gmm.py`, and the newly uploaded course CSV. Ran `OPENBLAS_NUM_THREADS=1 python -m unittest -v test_gmm` and `OPENBLAS_NUM_THREADS=1 python gmm_em.py` in a separate review directory. All four tests passed. All 48 default starts converged. The four log-likelihoods, AIC/BIC values, best-run iteration counts and strict tolerance validation reproduced the figures above. K=3 remains BIC-optimal; K=4 remains AIC-optimal. The strict run preserved all 1,000 hard assignments. Fresh end-to-end runtime was **6.496 seconds** including plotting and the strict check. No source algorithm or committed experiment outputs were overwritten. The refreshed downloadable presentation was exported to PDF; the existing repository PPTX was not replaced. This review is AI-assisted, not evidence of independent student work.

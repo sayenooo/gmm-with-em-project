@@ -26,3 +26,7 @@ The instructor requires **(1) tool, (2) assisted portions, (3) how it assisted, 
 4. Include any additional AI tools, prompts or external sources actually used by the students.
 
 **Why not say “AI only formatted the slides and checked our code”?** That would contradict the documented chat in which ChatGPT created the initial code, ran experiments and drafted the deck. Such a statement would not satisfy the handout's requirement to accurately describe which sections AI helped with.
+
+## Additional assistance — November 26, 2026
+
+ChatGPT inspected the GitHub repository, verified the Python source and uploaded data against Git blob hashes, reran the four unit tests and default experiment, interpreted reproducibility results, refreshed the 16-slide presentation and speaker notes, and organized the README and presentation guide. This is additional AI-assisted work, not independently completed student work. Representative prompt: “бро давай за это время сделаем assignment по аэроспейс там говорилось вот гитхаб ... надо сделаеть 10/10 презентацию и организовать гитхаб”. The team must still document verified individual contributions and any further assistance before submission.
