@@ -35,12 +35,16 @@ def e_step(X, weights, means, covariances):
         if sign <= 0:
             raise FloatingPointError('Invalid covariance')
         diff = X - mean
-        mahalanobis = np.einsum('ni,ij,nj->n', diff, np.linalg.inv(cov), diff)
-        log_joint[:, j] = np.log(weight) - 0.5 * (d * np.log(2 * np.pi) + log_det + mahalanobis)
+        # Each row gives (x - mean)^T inv(cov) (x - mean).
+        mahalanobis = np.sum((diff @ np.linalg.inv(cov)) * diff, axis=1)
+        log_density = -0.5 * (d * np.log(2 * np.pi) + log_det + mahalanobis)
+        log_joint[:, j] = np.log(weight) + log_density
     # Subtract the maximum before exponentiation to avoid underflow.
     maximum = log_joint.max(axis=1, keepdims=True)
-    log_total = maximum + np.log(np.exp(log_joint - maximum).sum(axis=1, keepdims=True))
-    responsibilities = np.exp(log_joint - log_total)
+    scaled = np.exp(log_joint - maximum)
+    total = scaled.sum(axis=1, keepdims=True)
+    log_total = maximum + np.log(total)
+    responsibilities = scaled / total
     return responsibilities, float(log_total.sum())
 
 
@@ -51,11 +55,12 @@ def m_step(X, responsibilities, reg=1e-6):
     if np.any(counts < 1e-10):
         raise FloatingPointError('Empty component')
     weights = counts / n
-    means = responsibilities.T @ X / counts[:, None]
+    means = (responsibilities.T @ X) / counts[:, None]
     covariances = []
     for j, mean in enumerate(means):
         diff = X - mean
-        cov = (diff.T * responsibilities[:, j]) @ diff / counts[j]
+        weighted_diff = diff * responsibilities[:, j, None]
+        cov = (weighted_diff.T @ diff) / counts[j]
         covariances.append((cov + cov.T) / 2 + reg * np.eye(d))
     return weights, means, np.array(covariances)
 
@@ -63,24 +68,24 @@ def m_step(X, responsibilities, reg=1e-6):
 # 4. Alternate the two steps until relative likelihood change is small.
 def fit_once(X, k, seed, tol=1e-7, max_iter=1000, reg=1e-6):
     weights, means, covs = initialize(X, k, np.random.default_rng(seed), reg)
-    r, ll = e_step(X, weights, means, covs)
-    history = [ll]
+    responsibilities, likelihood = e_step(X, weights, means, covs)
+    history = [likelihood]
     converged = False
     for _ in range(max_iter):
-        weights, means, covs = m_step(X, r, reg)
-        r, ll = e_step(X, weights, means, covs)
+        weights, means, covs = m_step(X, responsibilities, reg)
+        responsibilities, likelihood = e_step(X, weights, means, covs)
         previous = history[-1]
-        history.append(ll)
-        if abs(ll - previous) <= tol * max(1., abs(previous)):
+        history.append(likelihood)
+        if abs(likelihood - previous) <= tol * max(1., abs(previous)):
             converged = True
             break
     # Sort components by their first mean coordinate for consistent labels.
     order = np.argsort(means[:, 0])
-    assert np.allclose(r.sum(axis=1), 1) and np.allclose(weights.sum(), 1)
+    assert np.allclose(responsibilities.sum(axis=1), 1) and np.allclose(weights.sum(), 1)
     assert np.all(np.linalg.eigvalsh(covs) > 0)
     return dict(k=k, seed=seed, weights=weights[order], means=means[order],
-                covs=covs[order], r=r[:, order], history=np.array(history),
-                ll=ll, converged=converged, iterations=len(history) - 1)
+                covs=covs[order], r=responsibilities[:, order], history=np.array(history),
+                ll=likelihood, converged=converged, iterations=len(history) - 1)
 
 
 # 5. Try several initializations; evaluate the best converged model.
@@ -96,9 +101,11 @@ def fit(X, k, restarts=12, seed=42, tol=1e-7, max_iter=1000):
         raise RuntimeError(f'No converged run for K={k}')
     best = max(converged, key=lambda run: run['ll'])
     n, d = X.shape
+    # Free weights + mean coordinates + unique covariance entries.
     p = (k - 1) + k * d + k * d * (d + 1) // 2
-    best.update(p=p, aic=2 * p - 2 * best['ll'],
-                bic=p * np.log(n) - 2 * best['ll'], runs=runs)
+    likelihood = best['ll']
+    best.update(p=p, aic=2 * p - 2 * likelihood,
+                bic=p * np.log(n) - 2 * likelihood, runs=runs)
     return best
 
 

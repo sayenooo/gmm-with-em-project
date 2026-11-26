@@ -2,7 +2,7 @@
 
 **Scope:** The course handout requires (1) GMM/EM from scratch, (2) the course FAA CSV, (3) K=2,3,4,5 scatterplots, (4) evidence of enough iterations, (5) justified optimal K; code must finish in <5 min; deliverables are 15-minute slides and source code. The 3-page handout additionally requires shared team work, citations and AI disclosure.
 
-**Source of evidence:** `FAA_AEDT_data.csv`, `gmm_em.py`, `test_gmm.py`, `results/`, and the deck. Statements below are checks of project files/assistant-environment results, not a claim that students independently performed them.
+**Source of evidence:** `FAA_AEDT_data.csv`, `gmm_em.py`, `gmm_report.py`, `test_gmm.py`, `results/`, and the deck. Statements below are checks of project files/assistant-environment results, not a claim that students independently performed them.
 
 | Step | Reproducible check | What to record/expect |
 |---|---|---|

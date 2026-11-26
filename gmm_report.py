@@ -27,25 +27,54 @@ def save_results(X, models, best, strict, out):
                    total_restarts=len(m['runs']), mean_max_posterior=m['r'].max(axis=1).mean())
         metrics.append(row)
         print(f"K={m['k']}: LL={m['ll']:.4f}, AIC={m['aic']:.2f}, BIC={m['bic']:.2f}, iterations={m['iterations']}")
-        restarts.extend(dict(K=m['k'], seed=r['seed'], log_likelihood=r['ll'],
-                             iterations=r['iterations'], converged=r['converged']) for r in m['runs'])
-        write_csv(out / f"convergence_k{m['k']}.csv", [dict(iteration=i, log_likelihood=v)
-                                                       for i, v in enumerate(m['history'])])
+        for run in m['runs']:
+            restarts.append(dict(K=m['k'], seed=run['seed'], log_likelihood=run['ll'],
+                                 iterations=run['iterations'], converged=run['converged']))
+        history = [dict(iteration=i, log_likelihood=value)
+                   for i, value in enumerate(m['history'])]
+        write_csv(out / f"convergence_k{m['k']}.csv", history)
     write_csv(out / 'model_selection.csv', metrics)
     write_csv(out / 'restarts.csv', restarts)
     k = best['k']
     labels = best['r'].argmax(axis=1)
-    write_csv(out / 'cluster_parameters.csv', [dict(cluster=j+1, weight=best['weights'][j],
-        mean_x1=best['means'][j, 0], mean_x2=best['means'][j, 1],
-        cov_x1_x1=best['covs'][j, 0, 0], cov_x1_x2=best['covs'][j, 0, 1],
-        cov_x2_x2=best['covs'][j, 1, 1], hard_count=int((labels == j).sum())) for j in range(k)])
-    np.savetxt(out / 'cluster_assignments.csv', np.column_stack([X, labels+1, best['r']]),
-               delimiter=',', header='x1,x2,cluster,' + ','.join(f'p_cluster_{j+1}' for j in range(k)), comments='')
+    parameters = []
+    for j in range(k):
+        mean = best['means'][j]
+        cov = best['covs'][j]
+        parameters.append(dict(cluster=j+1, weight=best['weights'][j],
+            mean_x1=mean[0], mean_x2=mean[1], cov_x1_x1=cov[0, 0],
+            cov_x1_x2=cov[0, 1], cov_x2_x2=cov[1, 1],
+            hard_count=int((labels == j).sum())))
+    write_csv(out / 'cluster_parameters.csv', parameters)
+    assignments = np.column_stack([X, labels+1, best['r']])
+    columns = ['x1', 'x2', 'cluster'] + [f'p_cluster_{j+1}' for j in range(k)]
+    np.savetxt(out / 'cluster_assignments.csv', assignments,
+               delimiter=',', header=','.join(columns), comments='')
     write_csv(out / 'convergence_validation.csv', [dict(K=k, standard_iterations=best['iterations'],
         strict_iterations=strict['iterations'], standard_LL=best['ll'], strict_LL=strict['ll'],
         LL_difference=strict['ll']-best['ll'], label_agreement=np.mean(labels == strict['r'].argmax(axis=1)),
         strict_converged=strict['converged'])])
+    # Figures are independent of the CSV export.
     make_plots(X, models, out)
+
+
+def save_figure(fig, filename, out):
+    fig.savefig(out / filename, dpi=180)
+    plt.close(fig)
+
+def plot_clusters(ax, X, model, colors):
+    labels = model['r'].argmax(axis=1)
+    for j in range(model['k']):
+        ax.scatter(*X[labels == j].T, s=11, alpha=.65, color=colors[j], label=f'C{j+1}', linewidths=0)
+        values, vectors = np.linalg.eigh(model['covs'][j])
+        angle = np.degrees(np.arctan2(vectors[1, 1], vectors[0, 1]))
+        # 95% probability contour for a two-dimensional Gaussian.
+        width, height = 2 * np.sqrt(5.991 * values[::-1])
+        ax.add_patch(Ellipse(model['means'][j], width, height, angle=angle, fill=False, color=colors[j], lw=2))
+        ax.scatter(*model['means'][j], marker='X', s=85, color=colors[j], edgecolors='white', zorder=5)
+    ax.set(xlabel='x1', ylabel='x2', title=f"K = {model['k']}", xlim=(-10, 10), ylim=(-12, 9))
+    ax.set_aspect('equal')
+    ax.legend(loc='upper right', fontsize=8, frameon=False, ncol=2)
 
 
 def make_plots(X, models, out):
@@ -53,37 +82,19 @@ def make_plots(X, models, out):
     plt.rcParams.update({'font.size': 11, 'axes.spines.top': False, 'axes.spines.right': False,
                          'axes.grid': True, 'grid.alpha': .18, 'savefig.bbox': 'tight'})
 
-    def save(fig, filename):
-        fig.savefig(out / filename, dpi=180)
-        plt.close(fig)
-
-    def scatter(ax, model):
-        labels = model['r'].argmax(axis=1)
-        for j in range(model['k']):
-            ax.scatter(*X[labels == j].T, s=11, alpha=.65, color=colors[j], label=f'C{j+1}', linewidths=0)
-            values, vectors = np.linalg.eigh(model['covs'][j])
-            angle = np.degrees(np.arctan2(vectors[1, 1], vectors[0, 1]))
-            # 95% probability contour for a two-dimensional Gaussian.
-            width, height = 2 * np.sqrt(5.991 * values[::-1])
-            ax.add_patch(Ellipse(model['means'][j], width, height, angle=angle, fill=False, color=colors[j], lw=2))
-            ax.scatter(*model['means'][j], marker='X', s=85, color=colors[j], edgecolors='white', zorder=5)
-        ax.set(xlabel='x1', ylabel='x2', title=f"K = {model['k']}", xlim=(-10, 10), ylim=(-12, 9))
-        ax.set_aspect('equal')
-        ax.legend(loc='upper right', fontsize=8, frameon=False, ncol=2)
-
     fig, ax = plt.subplots(figsize=(6, 5))
     ax.scatter(*X.T, s=12, color='#24465E', alpha=.65, linewidths=0)
     ax.set(xlabel='x1', ylabel='x2', title='FAA AEDT dataset | 1,000 observations')
     ax.set_aspect('equal')
-    save(fig, 'raw_data.png')
+    save_figure(fig, 'raw_data.png', out)
     fig, axes = plt.subplots(2, 2, figsize=(10, 9), constrained_layout=True)
     for ax, model in zip(axes.flat, models):
-        scatter(ax, model)
-    save(fig, 'clusters_all.png')
+        plot_clusters(ax, X, model, colors)
+    save_figure(fig, 'clusters_all.png', out)
     for model in models:
         fig, ax = plt.subplots(figsize=(5.4, 5))
-        scatter(ax, model)
-        save(fig, f"clusters_k{model['k']}.png")
+        plot_clusters(ax, X, model, colors)
+        save_figure(fig, f"clusters_k{model['k']}.png", out)
     fig, axes = plt.subplots(1, 2, figsize=(10, 4), constrained_layout=True)
     for ax, key in zip(axes, ['aic', 'bic']):
         ks = [m['k'] for m in models]
@@ -95,7 +106,7 @@ def make_plots(X, models, out):
         for k, value in zip(ks, values):
             ax.annotate(f'{value:.1f}', (k, value), xytext=(0, 8), textcoords='offset points', ha='center', fontsize=9)
         ax.margins(y=.2)
-    save(fig, 'model_selection.png')
+    save_figure(fig, 'model_selection.png', out)
     fig, axes = plt.subplots(1, 2, figsize=(10, 4), constrained_layout=True)
     for model, color in zip(models, colors):
         h = model['history']
@@ -105,4 +116,4 @@ def make_plots(X, models, out):
     axes[1].set(xlabel='EM iteration', ylabel='Absolute likelihood change', title='Update size approaches zero')
     for ax in axes:
         ax.legend(frameon=False)
-    save(fig, 'convergence.png')
+    save_figure(fig, 'convergence.png', out)

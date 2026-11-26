@@ -1,37 +1,12 @@
-# FAA AEDT clustering — Gaussian Mixture Model with EM
+# FAA AEDT — Gaussian Mixture Model with EM
 
-**Fall 2026 group assignment · Due Monday, November 30, 2026 (no late submissions)**
+Application of AI in Aerospace · Sejong University · Fall 2026
 
-**Status:** Technical draft tested and reproduced; **not ready for final submission until students fill in their true names and verify/document individual contributions**. See `TEAM_CONTRIBUTIONS.md` and `SUBMISSION_CHECKLIST.md`.
+Team: Maisha, Zhansaya, Chaewon. Confirm full names and actual contributions before submission.
 
-## Quick navigation
+## Run the project
 
-| Purpose | Open |
-|---|---|
-| Presentation and 15-minute defense | [Presentation guide](PRESENTATION_GUIDE.md) · [existing PowerPoint](FAA_GMM_EM_presentation.pptx) · [Q&A](DEFENSE_QA.md) |
-| Implementation | [EM source](gmm_em.py) · [tests](test_gmm.py) · [dependencies](requirements.txt) |
-| Experimental evidence | [K=2–5 plots](results/clusters_all.png) · [convergence](results/convergence.png) · [model comparison](results/model_selection.csv) |
-| Reproducibility | [Audit](REPRODUCTION_AUDIT.md) · [validation steps](VALIDATION_STEPS.md) |
-| Submission | [Checklist](SUBMISSION_CHECKLIST.md) · [references](REFERENCES.md) · [AI disclosure](AI_DISCLOSURE.md) · [team contributions](TEAM_CONTRIBUTIONS.md) |
-
-**Latest verification (26 Nov):** the two Python source files and uploaded dataset matched the repository's Git blob hashes. Four tests passed, 48/48 default starts converged, and the complete default analysis took 6.496 seconds in the review environment. The fitted metrics and strict-tolerance result reproduced. The updated downloadable deck is supplied separately in ChatGPT; the existing repository PPTX is preserved.
-
-## What is included
-
-- `gmm_em.py`: original full-covariance Gaussian mixture model trained using E-step and M-step coded in NumPy. No sklearn/SciPy GMM implementation is called.
-- `FAA_AEDT_data.csv`: course-provided input data (1,000 observations, two features).
-- `test_gmm.py`: unit tests for normal density, M-step, synthetic recovery, and dataset reproducibility.
-- `results/`: hard and soft cluster assignments, fitted means/covariances, individual scatter plots for K=2,3,4,5, combined figure, likelihood curves, model-selection tables/plot, and runtime details.
-- `FAA_GMM_EM_presentation.pptx`: 16-slide English deck (including references and AI disclosure) with speaker notes for an approximately 15-minute presentation.
-- `AI_DISCLOSURE.md`: truthful five-part AI usage disclosure; requires actual student-contribution fields before submission.
-- `REFERENCES.md`: checked peer-reviewed EM/GMM, AIC/BIC publications and FAA primary website, with claim-to-citation map.
-- `VALIDATION_STEPS.md`: reproducible step-by-step independent review instructions and evidence log.
-- `TEAM_CONTRIBUTIONS.md`: fields to complete truthfully for your actual team.
-- `SUBMISSION_CHECKLIST.md` and `DEFENSE_QA.md`: final verification and presentation practice.
-
-## Reproduce the experiments
-
-Requires **Python 3.10+**. In the repository directory run:
+Use Python 3.10 or newer. Keep the three Python files and the dataset in the same folder.
 
 ```bash
 python -m pip install -r requirements.txt
@@ -39,37 +14,48 @@ python -m unittest -v test_gmm
 python gmm_em.py
 ```
 
-The last command rewrites the `results/` outputs. You can change the dataset, output folder, or restart count with `--data`, `--out` or `--restarts` (e.g. `python gmm_em.py --restarts 12`). Run the **default command**, not a reduced-restart shortcut, when demonstrating the five-minute requirement. Record the elapsed time on the machine used for demonstration.
+The final command trains K=2, 3, 4, 5, prints the results, and writes figures and CSV tables to `results/`. It does not use a prebuilt GMM implementation.
 
-**Implementation:** full 2×2 covariance per component; custom log-sum-exp and multivariate Gaussian log-density; responsibility-weighted E-step/M-step; distance-weighted initialization followed by ten Lloyd iterations; 12 random restarts for each K (seeds 42–53); small covariance regularization `1e-6`; relative likelihood-change threshold `1e-7`; maximum 1,000 EM iterations. The converged run with maximum log-likelihood is selected for each K. All calculations of likelihood, weights, means, covariances, AIC and BIC are performed by project code, not a pre-built mixture model.
+## Read the code
 
-## Findings from supplied data
+| File | Purpose |
+|---|---|
+| [gmm_em.py](gmm_em.py) | Initialization, E-step, M-step, EM loop, AIC/BIC, experiment |
+| [gmm_report.py](gmm_report.py) | Save tables and draw plots |
+| [test_gmm.py](test_gmm.py) | Four correctness checks |
+| [FAA_AEDT_data.csv](FAA_AEDT_data.csv) | 1,000 two-dimensional observations |
 
-- Input shape: **1,000 × 2**, no non-finite values, 999 unique rows (one repeated observation retained).
-- Model comparison, full-covariance GMM with 12 restarts per K:
+In EM, the E-step computes responsibilities; the M-step updates mixture weights, means, and covariance matrices. The loop stops when the relative change in log-likelihood is at most 1e-7 (maximum 1,000 iterations). Each K uses 12 starts with seeds 42–53, distance-weighted initialization and ten nearest-center updates. We retain the converged run with the highest log-likelihood. A covariance adjustment of 1e-6 and log-space calculations protect numerical stability.
 
-| K | Log-likelihood | AIC ↓ | BIC ↓ | Best-run EM iterations |
+## Results
+
+| K | Log-likelihood | AIC | BIC | Iterations |
 |---|---:|---:|---:|---:|
-| 2 | −5091.6974 | 10205.39 | 10259.38 | 16 |
-| 3 | −4955.6770 | 9945.35 | **10028.79** | 32 |
-| 4 | −4944.9941 | **9935.99** | 10048.87 | 207 |
-| 5 | −4939.5651 | 9937.13 | 10079.46 | 185 |
+| 2 | -5091.6974 | 10205.39 | 10259.38 | 16 |
+| 3 | -4955.6770 | 9945.35 | **10028.79** | 32 |
+| 4 | -4944.9941 | **9935.99** | 10048.87 | 207 |
+| 5 | -4939.5651 | 9937.13 | 10079.46 | 185 |
 
-- **K=3 is recommended by BIC** among *the four candidate values tested*. AIC prefers K=4; that disagreement is reported, not hidden.
-- At K=3, the hard assignments contain **193, 396, 411** observations. Hard counts are not equal to the soft mixture weights.
-- All **48/48 starts converged** with these settings. Tightening tolerance to `1e-10` changed the best K=3 run from 32 to 39 iterations, improved log-likelihood by only about `0.000190`, and produced the **same hard assignments for all 1,000 observations**. This supports practical convergence, **not a proof of a global optimum**.
-- Original end-to-end runtime in the authoring environment was **7.934 seconds**, including plotting and the strict convergence rerun, which is below the **300-second** limit; runtime can vary by hardware and environment.
+BIC favors K=3 among the four candidates; AIC favors K=4. At K=3 the hard cluster counts are 193, 396 and 411. A stricter tolerance (1e-10) changes 32 iterations to 39, improves likelihood by about 0.000190 and leaves all 1,000 assignments unchanged. This supports practical convergence, not a global optimum.
 
-**Interpretation limit:** The CSV identifies columns only as `x1` and `x2`, without physical units or labels. The assignment mentions takeoff weight/reduced thrust as possible context, but the results **cannot establish actual FAA stage lengths or operational categories** without ground truth and aviation metadata.
+- [Scatter plots](results/clusters_all.png)
+- [Convergence](results/convergence.png)
+- [Model comparison](results/model_selection.png)
+- [Numerical results](results/model_selection.csv)
 
-## Team responsibilities and academic integrity
+Latest refactor check (26 November 2026): four unit tests passed; all 48 starts converged; all nine numerical CSV files matched the preceding run to absolute/relative tolerance 1e-9. End-to-end runtime was 6.098 seconds with OPENBLAS_NUM_THREADS=1, NumPy 2.3.5 and Matplotlib 3.10.8 in the review environment. Existing figures and tables remain historical outputs; run the code to regenerate them. Runtime varies by machine. The optional --data, --out and --restarts arguments remain supported; use defaults for the reported experiment.
 
-All team members must understand the EM derivation, execute or review the experiment, contribute fairly and record their own work. `TEAM_CONTRIBUTIONS.md` is a suggested division of work, **not a statement that work has already been completed**. One person submits the final presentation and code for the team; individual peer assessments are still needed per course instructions. Check the e-campus submission format.
+The dataset identifies its features only as x1 and x2. Do not claim that these clusters establish actual FAA stage lengths or physical quantities without additional metadata.
 
-## Sources, provenance and AI disclosure
+## Submission and defense
 
-Course handout: *Gaussian Mixture Model (GMM) with Expectation-Maximization (EM)*, Fall 2026, pp. 1–3. Dataset: course-provided `FAA_AEDT_data.csv`. Source code and draft slides were developed with **OpenAI ChatGPT** assistance, including implementation ideas, code drafting, testing, experimental interpretation and presentation drafting. See **`AI_DISCLOSURE.md`** for the full tool/scope/how/prompt disclosure and the **student contribution fields that must be completed before submission**. Consult **`REFERENCES.md`** for the authoritative sources checked on November 24, and cite only sources actually used. Do not claim independent work that was done by AI.
+Submit one 15-minute presentation and the simulation code per team by 30 November 2026. Each student completes the separate peer assessment. Check the course submission format.
 
-## Readable implementation (26 November 2026)
+- [Presentation guide](PRESENTATION_GUIDE.md) and [existing slides](FAA_GMM_EM_presentation.pptx)
+- [Defense Q&A](DEFENSE_QA.md)
+- [Validation steps](VALIDATION_STEPS.md) and [historical audit](REPRODUCTION_AUDIT.md)
+- [References](REFERENCES.md)
+- [AI disclosure](AI_DISCLOSURE.md)
+- [Team contributions](TEAM_CONTRIBUTIONS.md)
 
-`gmm_em.py` now separates the six core steps (initialization, E-step, M-step, EM loop, model selection and experiment). `gmm_report.py` contains CSV and plotting utilities only. Keep both files together; the run command is unchanged. No fitted-model library is used. The previous figures and numerical tables are retained as historical evidence: a fresh run of the refactor reproduced every model-selection CSV value and the strict convergence result exactly. Existing four tests passed; all 48 restarts converged. End-to-end runtime was 6.346 s with `OPENBLAS_NUM_THREADS=1`, NumPy 2.3.5 and Matplotlib 3.10.8 in the review environment. Runtime and plotting appearance can vary. Team members should independently execute and review the code before submission.
+AI assisted with code drafting, refactoring, experiments, validation, and presentation materials. The team must review and execute the code and accurately document independent contributions and AI use before submission.
