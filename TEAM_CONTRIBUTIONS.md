@@ -1,6 +1,6 @@
 # Team contributions — complete with real names and actual work
 
-### Zhansaya - Algorithm Design & Implementation
+### Maisha - Algorithm Design & Implementation
 
 - Study the mathematical foundations of GMM and EM.
 - Derive the Expectation and Maximization steps.
@@ -8,7 +8,7 @@
 - Implement numerical stability and convergence mechanisms.
 - Test the correctness of the algorithm.
 
-### Maisha Experimental Analysis & Model Evaluation
+### Zhansaya Experimental Analysis & Model Evaluation
 
 - Explore and analyze the FAA AEDT dataset.
 - Conduct clustering experiments for K = 2, 3, 4, and 5.
@@ -16,7 +16,7 @@
 - Evaluate algorithm convergence and runtime.
 - Determine the optimal number of clusters using AIC and BIC.
 
-### 함채원 Aerospace Application & Results Interpretation
+### Chaewon Aerospace Application & Results Interpretation
 
 - Research the FAA Aviation Environmental Design Tool (AEDT).
 - Explain the relevance of GMM clustering to aviation applications.
