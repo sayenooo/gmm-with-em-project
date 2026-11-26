@@ -49,13 +49,9 @@ The dataset identifies its features only as x1 and x2. Do not claim that these c
 
 ## Submission and defense
 
-Submit one 15-minute presentation and the simulation code per team by 30 November 2026. Each student completes the separate peer assessment. Check the course submission format.
-
 - [Presentation guide](PRESENTATION_GUIDE.md) and [existing slides](FAA_GMM_EM_presentation.pptx)
 - [Defense Q&A](DEFENSE_QA.md)
 - [Validation steps](VALIDATION_STEPS.md) and [historical audit](REPRODUCTION_AUDIT.md)
 - [References](REFERENCES.md)
 - [AI disclosure](AI_DISCLOSURE.md)
 - [Team contributions](TEAM_CONTRIBUTIONS.md)
-
-AI assisted with code drafting, refactoring, experiments, validation, and presentation materials. The team must review and execute the code and accurately document independent contributions and AI use before submission.
