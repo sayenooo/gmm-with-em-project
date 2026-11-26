@@ -11,3 +11,5 @@ Assistance with experimental analysis and numerical validation.
 Review of technical accuracy and reproducibility.
 
 Improvement of presentation structure, visualizations, and academic writing.
+
+ChatGPT also refactored the implementation for readability, separated reporting from the EM algorithm, and reran the numerical and unit-test checks on 26 November 2026. Document the team's actual independent implementation, review, verification, and presentation contributions before submission.
