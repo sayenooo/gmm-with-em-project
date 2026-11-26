@@ -59,12 +59,9 @@ def gmm(X, k, seed, tol=1e-7, max_iter=2000):
 
 def main():
     start = perf_counter()
-    data = ROOT / 'FAA_AEDT_data.csv'
-    if not data.exists():
-        data = ROOT.parent / 'FAA_AEDT_data.csv'
-    X = np.loadtxt(data, delimiter=',', skiprows=1)
+    X = np.loadtxt(ROOT / 'FAA_AEDT_data.csv', delimiter=',', skiprows=1)
     assert X.shape == (1000, 2) and np.isfinite(X).all()
-    out = ROOT / 'simple_results'
+    out = ROOT / 'results'
     out.mkdir(exist_ok=True)
     rows = []
     models = {}
