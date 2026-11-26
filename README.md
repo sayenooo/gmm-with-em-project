@@ -40,4 +40,4 @@ Reference runtime: 3.45 seconds (single-threaded OpenBLAS, headless Matplotlib);
 
 ## Sources and disclosure
 
-Course-provided FAA_AEDT_data.csv and GMM with EM project description; see [AI disclosure](AI_DISCLOSURE.md). Team members must review, reproduce and explain the code and record their actual contributions before submission. The presentation is a separate deliverable and must use the results above, not the archived experiment.
+Course-provided FAA_AEDT_data.csv and GMM with EM project description; see [AI disclosure](AI_DISCLOSURE.md). 
